@@ -18,3 +18,5 @@ Make sure you have the following installed on your machine:
    ```shell
    git clone https://github.com/TechisHeaven/Todo-solidity.git
    ```
+
+Next lines will add soon.... 😊
