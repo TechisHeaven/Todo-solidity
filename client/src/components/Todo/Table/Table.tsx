@@ -3,10 +3,13 @@ import { Flex, Text } from "@radix-ui/themes";
 import PopOver from "./PopOver";
 import { TodoInterface } from "../../../types/TodoType";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatchContext, useStateContext } from "../../../state";
 
 const TableSection = ({ todo }: { todo: TodoInterface[] | null }) => {
   //handle date and return is today or not
-
+  const dispatch = useDispatchContext();
+  const state = useStateContext();
+  const todoContract = state?.TodoContract.contract;
   const handleDate = (timestamp: number) => {
     const dateTime = new Date(timestamp * 1000);
     const isToday =
@@ -30,6 +33,15 @@ const TableSection = ({ todo }: { todo: TodoInterface[] | null }) => {
     }
   };
 
+  const handleCheckBox = async (value: TodoInterface) => {
+    try {
+      await todoContract?.methods.completeTodo(value.index).send();
+
+      dispatch?.({ type: "COMPLETE_TODO", payload: value.index });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="flex flex-col-reverse gap-4">
       <AnimatePresence>
@@ -48,6 +60,7 @@ const TableSection = ({ todo }: { todo: TodoInterface[] | null }) => {
                 <Text as="label" size="2">
                   <Flex gap="2" direction={"row"} className=" accent-[#3e43d5]">
                     <input
+                      onChange={() => handleCheckBox(value)}
                       type="checkbox"
                       className="w-4"
                       disabled={value.isCompleted}

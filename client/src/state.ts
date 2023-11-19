@@ -137,6 +137,24 @@ export const todoReducer: Reducer<TodoState, Action> = (
         loading: false,
         error: action.payload,
       };
+    case "COMPLETE_TODO":
+      const TodoIndex = action.payload;
+      const CompletedUpdatedTodos = state.todo.map((todo, index) => {
+        if (index === TodoIndex) {
+          // Mark the todo as completed by updating the isCompleted property
+          return {
+            ...todo,
+            isCompleted: true,
+          };
+        } else {
+          return todo;
+        }
+      });
+
+      return {
+        ...state, 
+        todo: CompletedUpdatedTodos
+      }
     case "ADD_TODO":
       return {
         ...state,
@@ -144,8 +162,8 @@ export const todoReducer: Reducer<TodoState, Action> = (
       };
 
     case "EDIT_TODO":
-  const { index, data } = action.payload;
-  const updatedTodos = state.todo.map((todo, i) => {
+      const { index, data } = action.payload;
+      const updatedTodos = state.todo.map((todo, i) => {
     if (i === index) {
       return data; // replace the item at the specified index
     } else {
